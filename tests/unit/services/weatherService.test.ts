@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  fetchWithTimeout,
   getWeather,
   searchCities,
   WeatherServiceError,
@@ -65,6 +66,7 @@ describe('searchCities', () => {
 
     expect(fetchMock).toHaveBeenCalledWith(
       'https://geocoding-api.open-meteo.com/v1/search?name=S%C3%A3o%20Paulo&count=5&language=pt&format=json',
+      expect.objectContaining({ signal: expect.any(AbortSignal) }),
     );
   });
 
@@ -119,5 +121,33 @@ describe('getWeather', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) }));
 
     await expect(getWeather(city)).rejects.toBeInstanceOf(WeatherServiceError);
+  });
+});
+
+describe('fetchWithTimeout', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('converte AbortError em erro de timeout e sempre limpa o timer', async () => {
+    const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout');
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new DOMException('', 'AbortError')));
+
+    await expect(fetchWithTimeout('https://example.com')).rejects.toMatchObject({
+      kind: 'timeout',
+      message: 'A requisição demorou demais.',
+    });
+
+    expect(clearTimeoutSpy).toHaveBeenCalled();
+    clearTimeoutSpy.mockRestore();
+  });
+
+  it('converte falhas de rede em WeatherServiceError', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
+
+    await expect(fetchWithTimeout('https://example.com')).rejects.toMatchObject({
+      kind: 'network',
+      message: 'Falha de rede.',
+    });
   });
 });
