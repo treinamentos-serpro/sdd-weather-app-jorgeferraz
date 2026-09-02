@@ -1,12 +1,24 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import App from '../../src/App';
+import weatherData from '../../src/fixtures/weatherData';
+import * as weatherService from '../../src/services/weatherService';
+
+vi.mock('../../src/services/weatherService', () => ({
+  getWeather: vi.fn(),
+  searchCities: vi.fn(),
+}));
 
 describe('App', () => {
+  beforeEach(() => {
+    vi.mocked(weatherService.searchCities).mockResolvedValue([weatherData.city]);
+    vi.mocked(weatherService.getWeather).mockResolvedValue(weatherData);
+  });
+
   afterEach(() => {
-    vi.unstubAllGlobals();
+    vi.resetAllMocks();
   });
 
   it('exibe a orientação inicial e não altera o estado para uma busca vazia', async () => {
@@ -19,10 +31,28 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'Pesquise uma cidade' })).toBeInTheDocument();
   });
 
-  it('usa o fixture após uma busca válida sem acessar a rede', async () => {
+  it('mostra o carregamento enquanto aguarda a busca', async () => {
     const user = userEvent.setup();
-    const fetchMock = vi.fn();
-    vi.stubGlobal('fetch', fetchMock);
+    let resolveSearch: (value: typeof weatherData.city[]) => void;
+    vi.mocked(weatherService.searchCities).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveSearch = resolve;
+        }),
+    );
+
+    render(<App />);
+
+    await user.type(screen.getByLabelText('Pesquisar cidade'), 'São Paulo{Enter}');
+
+    expect(screen.getByRole('status')).toBeInTheDocument();
+    resolveSearch!([weatherData.city]);
+
+    expect(await screen.findByRole('heading', { name: 'São Paulo' })).toBeInTheDocument();
+  });
+
+  it('exibe dados retornados pelo service após uma busca válida', async () => {
+    const user = userEvent.setup();
 
     render(<App />);
 
@@ -30,26 +60,28 @@ describe('App', () => {
 
     expect(await screen.findByRole('heading', { name: 'São Paulo' })).toBeInTheDocument();
     expect(screen.getAllByRole('article')).toHaveLength(5);
-    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('exibe os estados vazio e erro, com nova tentativa', async () => {
     const user = userEvent.setup();
+    vi.mocked(weatherService.searchCities).mockResolvedValueOnce([]).mockRejectedValueOnce(
+      new Error('Falha de rede.'),
+    );
 
     render(<App />);
 
     const input = screen.getByLabelText('Pesquisar cidade');
-    await user.type(input, 'vazio{Enter}');
+    await user.type(input, 'Cidade inexistente{Enter}');
     expect(
       await screen.findByRole('heading', { name: 'Nenhuma cidade encontrada' }),
     ).toBeInTheDocument();
 
     await user.clear(input);
-    await user.type(input, 'erro{Enter}');
+    await user.type(input, 'Falha{Enter}');
     expect(await screen.findByRole('alert')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Tentar novamente' }));
-    expect(await screen.findByRole('alert')).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'São Paulo' })).toBeInTheDocument();
   });
 
   it('converte a temperatura atual e da previsão ao trocar a unidade', async () => {
