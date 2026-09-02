@@ -26,6 +26,7 @@ const weatherCodes: Record<number, WeatherInfo> = {
 };
 
 export function getWeatherInfo(weatherCode: number | null): WeatherInfo {
-  return weatherCode === null ? { label: 'Indisponível', icon: '—' } :
-    (weatherCodes[weatherCode] ?? { label: 'Indisponível', icon: '—' });
+  return weatherCode === null
+    ? { label: 'Indisponível', icon: '—' }
+    : (weatherCodes[weatherCode] ?? { label: 'Indisponível', icon: '—' });
 }

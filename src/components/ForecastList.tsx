@@ -1,5 +1,5 @@
-import ForecastCard from './ForecastCard';
 import type { ForecastDay, Unit } from '../types/weather';
+import ForecastCard from './ForecastCard';
 
 interface ForecastListProps {
   forecast: ForecastDay[];

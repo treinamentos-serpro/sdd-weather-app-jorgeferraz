@@ -16,7 +16,9 @@ export default function ForecastCard({ day, unit }: ForecastCardProps) {
       <time className="font-semibold text-white" dateTime={day.date}>
         {formatForecastDate(day.date)}
       </time>
-      <span aria-hidden="true" className="my-3 block text-4xl">{weather.icon}</span>
+      <span aria-hidden="true" className="my-3 block text-4xl">
+        {weather.icon}
+      </span>
       <p className="text-sm text-white/80">{weather.label}</p>
       <dl className="mt-4 space-y-1 text-sm">
         <div className="flex justify-between gap-2">
@@ -25,12 +27,16 @@ export default function ForecastCard({ day, unit }: ForecastCardProps) {
         </div>
         <div className="flex justify-between gap-2">
           <dt className="text-white/60">Mín.</dt>
-          <dd className="font-semibold text-white">{formatTemperature(day.temperatureMinC, unit)}</dd>
+          <dd className="font-semibold text-white">
+            {formatTemperature(day.temperatureMinC, unit)}
+          </dd>
         </div>
         <div className="flex justify-between gap-2">
           <dt className="text-white/60">Chuva</dt>
           <dd className="font-semibold text-white">
-            {day.precipitationProbability === null ? 'Indisponível' : `${day.precipitationProbability}%`}
+            {day.precipitationProbability === null
+              ? 'Indisponível'
+              : `${day.precipitationProbability}%`}
           </dd>
         </div>
       </dl>

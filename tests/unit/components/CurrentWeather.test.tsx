@@ -18,7 +18,9 @@ describe('CurrentWeather', () => {
   });
 
   it('converte a temperatura para Fahrenheit', () => {
-    render(<CurrentWeather city={weatherData.city} current={weatherData.current} unit="fahrenheit" />);
+    render(
+      <CurrentWeather city={weatherData.city} current={weatherData.current} unit="fahrenheit" />,
+    );
 
     expect(screen.getByText('71 °F')).toBeInTheDocument();
   });

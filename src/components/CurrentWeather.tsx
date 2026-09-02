@@ -28,7 +28,9 @@ export default function CurrentWeather({ city, current, unit }: CurrentWeatherPr
       <p className="text-sm font-medium text-accent-400">Agora em</p>
       <h2 className="mt-1 text-2xl font-semibold text-white">{city.name}</h2>
       <div className="mt-6 flex items-center gap-5">
-        <span aria-hidden="true" className="text-6xl">{weather.icon}</span>
+        <span aria-hidden="true" className="text-6xl">
+          {weather.icon}
+        </span>
         <div>
           <p className="text-6xl font-bold leading-none text-sun sm:text-7xl">
             {formatTemperature(current.temperatureC, unit)}

@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react';
 import CurrentWeather from './components/CurrentWeather';
 import ForecastList from './components/ForecastList';
 import SearchBar from './components/SearchBar';
-import UnitToggle from './components/UnitToggle';
 import EmptyState from './components/states/EmptyState';
 import ErrorState from './components/states/ErrorState';
 import LoadingState from './components/states/LoadingState';
+import UnitToggle from './components/UnitToggle';
 import weatherData from './fixtures/weatherData';
 import type { Unit } from './types/weather';
 

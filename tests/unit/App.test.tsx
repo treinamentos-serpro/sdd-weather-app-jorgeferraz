@@ -40,7 +40,9 @@ describe('App', () => {
 
     const input = screen.getByLabelText('Pesquisar cidade');
     await user.type(input, 'vazio{Enter}');
-    expect(await screen.findByRole('heading', { name: 'Nenhuma cidade encontrada' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { name: 'Nenhuma cidade encontrada' }),
+    ).toBeInTheDocument();
 
     await user.clear(input);
     await user.type(input, 'erro{Enter}');

@@ -5,7 +5,10 @@ interface ErrorStateProps {
 
 export default function ErrorState({ message, onRetry }: ErrorStateProps) {
   return (
-    <div className="rounded-lg border border-red-300/30 bg-red-500/10 p-8 text-center text-white backdrop-blur-md" role="alert">
+    <div
+      className="rounded-lg border border-red-300/30 bg-red-500/10 p-8 text-center text-white backdrop-blur-md"
+      role="alert"
+    >
       <h2 className="text-xl font-semibold">Não foi possível carregar o clima</h2>
       <p className="mt-2 text-white/80">{message}</p>
       {onRetry ? (
