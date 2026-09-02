@@ -3,5 +3,8 @@
 @tailwind utilities;
 
 body {
-  @apply m-0 bg-night-900 font-sans text-white;
+  margin: 0;
+  background-color: #0b1020;
+  color: #ffffff;
+  font-family: Inter, system-ui, sans-serif;
 }
