@@ -36,7 +36,9 @@ export default function App() {
         ) : null}
         {status === 'error' ? (
           <ErrorState
-            message={error ?? 'Não foi possível consultar a previsão. Tente novamente em instantes.'}
+            message={
+              error ?? 'Não foi possível consultar a previsão. Tente novamente em instantes.'
+            }
             onRetry={retry}
           />
         ) : null}
