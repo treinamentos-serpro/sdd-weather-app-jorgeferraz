@@ -33,7 +33,7 @@ describe('App', () => {
 
   it('mostra o carregamento enquanto aguarda a busca', async () => {
     const user = userEvent.setup();
-    let resolveSearch: (value: typeof weatherData.city[]) => void;
+    let resolveSearch: (value: (typeof weatherData.city)[]) => void;
     vi.mocked(weatherService.searchCities).mockImplementation(
       () =>
         new Promise((resolve) => {
@@ -64,9 +64,9 @@ describe('App', () => {
 
   it('exibe os estados vazio e erro, com nova tentativa', async () => {
     const user = userEvent.setup();
-    vi.mocked(weatherService.searchCities).mockResolvedValueOnce([]).mockRejectedValueOnce(
-      new Error('Falha de rede.'),
-    );
+    vi.mocked(weatherService.searchCities)
+      .mockResolvedValueOnce([])
+      .mockRejectedValueOnce(new Error('Falha de rede.'));
 
     render(<App />);
 
