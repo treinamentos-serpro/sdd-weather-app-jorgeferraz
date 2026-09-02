@@ -1,23 +1,25 @@
 interface ErrorStateProps {
   message: string;
-  onRetry: () => void;
+  onRetry?: () => void;
 }
 
-/** Estado de erro com ação de "tentar novamente". */
 export default function ErrorState({ message, onRetry }: ErrorStateProps) {
   return (
-    <div role="alert" className="flex flex-col items-center gap-4 py-16 text-center">
-      <span aria-hidden="true" className="text-4xl">
-        ⚠️
-      </span>
-      <p className="text-white/80">{message}</p>
-      <button
-        type="button"
-        onClick={onRetry}
-        className="rounded-lg bg-accent-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-600"
-      >
-        Tentar novamente
-      </button>
+    <div
+      className="rounded-lg border border-red-300/30 bg-red-500/10 p-8 text-center text-white backdrop-blur-md"
+      role="alert"
+    >
+      <h2 className="text-xl font-semibold">Não foi possível carregar o clima</h2>
+      <p className="mt-2 text-white/80">{message}</p>
+      {onRetry ? (
+        <button
+          className="mt-5 rounded-md bg-accent-500 px-4 py-2 font-semibold text-white focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 focus:ring-offset-night-900"
+          onClick={onRetry}
+          type="button"
+        >
+          Tentar novamente
+        </button>
+      ) : null}
     </div>
   );
 }

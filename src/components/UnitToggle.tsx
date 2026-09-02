@@ -5,34 +5,33 @@ interface UnitToggleProps {
   onChange: (unit: Unit) => void;
 }
 
-/** Alternador de unidade Celsius/Fahrenheit, acessível por teclado. */
+const units: Array<{ label: string; value: Unit }> = [
+  { label: '°C', value: 'celsius' },
+  { label: '°F', value: 'fahrenheit' },
+];
+
 export default function UnitToggle({ unit, onChange }: UnitToggleProps) {
   return (
-    <div
-      role="group"
-      aria-label="Unidade de temperatura"
-      className="inline-flex rounded-lg border border-white/10 bg-white/5 p-1 backdrop-blur-md"
-    >
-      <button
-        type="button"
-        aria-pressed={unit === 'celsius'}
-        onClick={() => onChange('celsius')}
-        className={`rounded-md px-3 py-1 text-sm font-semibold transition ${
-          unit === 'celsius' ? 'bg-accent-500 text-white' : 'text-white/60 hover:text-white'
-        }`}
-      >
-        °C
-      </button>
-      <button
-        type="button"
-        aria-pressed={unit === 'fahrenheit'}
-        onClick={() => onChange('fahrenheit')}
-        className={`rounded-md px-3 py-1 text-sm font-semibold transition ${
-          unit === 'fahrenheit' ? 'bg-accent-500 text-white' : 'text-white/60 hover:text-white'
-        }`}
-      >
-        °F
-      </button>
+    <div aria-label="Unidade de temperatura" className="flex gap-1" role="group">
+      {units.map(({ label, value }) => {
+        const isActive = unit === value;
+
+        return (
+          <button
+            aria-pressed={isActive}
+            className={`min-w-12 rounded-md px-3 py-2 font-semibold outline-none transition-colors focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 focus:ring-offset-night-900 ${
+              isActive
+                ? 'bg-accent-500 text-white'
+                : 'border border-white/10 bg-white/5 text-white/80 hover:bg-white/10'
+            }`}
+            key={value}
+            onClick={() => onChange(value)}
+            type="button"
+          >
+            {label}
+          </button>
+        );
+      })}
     </div>
   );
 }

@@ -6,14 +6,17 @@ interface ForecastListProps {
   unit: Unit;
 }
 
-/** Grid responsivo com a previsão de 5 dias. */
 export default function ForecastList({ forecast, unit }: ForecastListProps) {
   return (
-    <section aria-label="Previsão de 5 dias">
-      <h2 className="mb-4 text-xl font-bold">Previsão de 5 dias</h2>
-      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-        {forecast.map((day, index) => (
-          <ForecastCard key={day.date} day={day} index={index} unit={unit} />
+    <section aria-labelledby="forecast-title" className="mt-8">
+      <h2 className="text-xl font-semibold text-white" id="forecast-title">
+        Previsão para os próximos dias
+      </h2>
+      <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        {forecast.map((day) => (
+          <li key={day.date}>
+            <ForecastCard day={day} unit={unit} />
+          </li>
         ))}
       </ul>
     </section>
